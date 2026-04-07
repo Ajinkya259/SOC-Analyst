@@ -202,7 +202,7 @@ def main():
         task_scores: List[float] = []
 
         for episode in range(EPISODES_PER_TASK):
-            print(f"\nSTART task={task} episode={episode + 1}/{EPISODES_PER_TASK}")
+            print(f"[START] task={task} episode={episode + 1}/{EPISODES_PER_TASK}", flush=True)
 
             # Reset (use episode index as seed for reproducibility)
             resp = requests.post(
@@ -231,7 +231,7 @@ def main():
                     )
                     response_text = completion.choices[0].message.content or ""
                 except Exception as exc:
-                    print(f"    LLM error: {exc}")
+                    print(f"    LLM error: {exc}", flush=True)
                     response_text = json.dumps(FALLBACK_ACTION)
 
                 action = parse_action(response_text)
@@ -244,18 +244,18 @@ def main():
                 obs = _extract_observation(step_resp.json())
 
                 reward = obs.get("reward", 0.0) or 0.0
-                print(f"STEP {step_count} action={action['action_type']}{params_str} reward={reward:+.3f} done={obs.get('done', False)}")
+                print(f"[STEP] step={step_count} action={action['action_type']}{params_str} reward={reward:+.3f} done={obs.get('done', False)}", flush=True)
 
                 if obs.get("done"):
                     final_reward = reward
                     break
 
                 if step_count >= 50:
-                    print("STEP safety_limit_reached")
+                    print("[STEP] safety_limit_reached", flush=True)
                     break
 
             task_scores.append(final_reward)
-            print(f"END task={task} episode={episode + 1} score={final_reward:.4f}")
+            print(f"[END] task={task} episode={episode + 1} score={final_reward:.4f} steps={step_count}", flush=True)
 
         avg = sum(task_scores) / len(task_scores) if task_scores else 0.0
         all_scores[task] = {"scores": task_scores, "average": avg}
