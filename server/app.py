@@ -31,7 +31,7 @@ def _get_or_create_env(session_id: str = "default") -> SOCEnvironment:
 
 
 @app.get("/")
-async def root() -> Dict[str, str]:
+async def root() -> Dict[str, Any]:
     """Root endpoint."""
     return {
         "name": "Cybersecurity Threat Response Agent",
