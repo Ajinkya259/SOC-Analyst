@@ -1,0 +1,35 @@
+name: soc_analyst_env
+version: "1.0.0"
+description: >
+  Cybersecurity Threat Response Agent — Investigate security alerts, classify
+  threats, and take response actions using real SOC analyst workflows.
+
+tasks:
+  - name: alert_triage
+    description: >
+      EASY: Classify a security alert as true positive or false positive.
+      Score is based on classification accuracy (60%), investigation
+      thoroughness (25%), and step efficiency (15%).
+    grader:
+      module: server.graders
+      function: grade_alert_triage
+
+  - name: full_investigation
+    description: >
+      MEDIUM: Investigate an alert end-to-end — classify it, assign the
+      correct severity, and execute the right response actions. Score is
+      based on classification (30%), severity accuracy (20%), response
+      action F1 (35%), and investigation thoroughness (15%).
+    grader:
+      module: server.graders
+      function: grade_full_investigation
+
+  - name: multi_alert_triage
+    description: >
+      HARD: Handle three complex alerts sequentially within a 45-step
+      budget. Each alert is scored on classification, severity, response
+      actions, investigation, and correct ticket closure. Later alerts
+      are weighted more heavily. Incomplete episodes are penalized.
+    grader:
+      module: server.graders
+      function: grade_multi_alert
